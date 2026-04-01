@@ -1,18 +1,161 @@
+@extends('adminlte::page')
 
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+@section('title', 'Tableau de bord | ISMO')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
-                </div>
+@section('content_header')
+    <div class="d-flex justify-content-between align-items-center">
+        <h1><i class="fas fa-tachometer-alt mr-2"></i>Tableau de bord</h1>
+        <span class="text-muted">{{ now()->format('d/m/Y') }}</span>
+    </div>
+@stop
+
+@section('content')
+
+{{-- Stats Cards --}}
+<div class="row">
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>{{ $stats['total_stagiaires'] }}</h3>
+                <p>Total Stagiaires</p>
+            </div>
+            <div class="icon"><i class="fas fa-users"></i></div>
+            <a href="{{ url('trainees') }}" class="small-box-footer">
+                Voir tout <i class="fas fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>{{ $stats['bac_temp_out'] }}</h3>
+                <p>Bac — Retrait temporaire</p>
+            </div>
+            <div class="icon"><i class="fas fa-graduation-cap"></i></div>
+            <a href="{{ url('documents/bac/temp-out') }}" class="small-box-footer">
+                Voir tout <i class="fas fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>{{ $stats['diplomes_prets'] }}</h3>
+                <p>Diplômes prêts</p>
+            </div>
+            <div class="icon"><i class="fas fa-certificate"></i></div>
+            <a href="{{ url('documents/diplome') }}" class="small-box-footer">
+                Voir tout <i class="fas fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>{{ $stats['mouvements_today'] }}</h3>
+                <p>Mouvements aujourd'hui</p>
+            </div>
+            <div class="icon"><i class="fas fa-exchange-alt"></i></div>
+            <a href="{{ url('movements/today') }}" class="small-box-footer">
+                Voir tout <i class="fas fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    {{-- Alertes Bac --}}
+    <div class="col-md-6">
+        <div class="card card-warning">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                    Alertes — Bac non retourné
+                </h3>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Stagiaire</th>
+                            <th>CIN</th>
+                            <th>Filière</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($bac_alerts as $doc)
+                        <tr>
+                            <td>{{ $doc->trainee->first_name }} {{ $doc->trainee->last_name }}</td>
+                            <td>{{ $doc->trainee->cin }}</td>
+                            <td>{{ $doc->trainee->filiere->code_filiere ?? '-' }}</td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="3" class="text-center text-success">
+                                <i class="fas fa-check-circle mr-1"></i>Aucune alerte
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</x-app-layout>
+
+    {{-- Derniers Mouvements --}}
+    <div class="col-md-6">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-history mr-1"></i>
+                    Derniers mouvements
+                </h3>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Stagiaire</th>
+                            <th>Document</th>
+                            <th>Action</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($recent_movements as $mov)
+                        <tr>
+                            <td>{{ $mov->document->trainee->first_name ?? '-' }}</td>
+                            <td>{{ $mov->document->type ?? '-' }}</td>
+                            <td>
+                                @if($mov->action_type == 'Sortie')
+                                    <span class="badge badge-warning">Sortie</span>
+                                @elseif($mov->action_type == 'Retour')
+                                    <span class="badge badge-success">Retour</span>
+                                @else
+                                    <span class="badge badge-info">Saisie</span>
+                                @endif
+                            </td>
+                            <td>{{ \Carbon\Carbon::parse($mov->date_action)->format('d/m/Y') }}</td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">Aucun mouvement</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@stop
+
+@section('css')
+<style>
+    .small-box .icon { font-size: 70px; top: 15px; }
+</style>
+@stop

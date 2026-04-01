@@ -47,7 +47,7 @@ return [
     'usermenu_header' => true,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => false,
-    'usermenu_desc' => true,
+    'usermenu_desc' => false,
     'usermenu_profile_url' => false,
 
     'layout_topnav' => null,
@@ -109,6 +109,7 @@ return [
     'laravel_js_path' => 'js/app.js',
 
     'menu' => [
+
         // Navbar
         [
             'type'         => 'navbar-search',
@@ -120,7 +121,7 @@ return [
             'topnav_right' => true,
         ],
 
-        // Sidebar
+        // Sidebar Search
         [
             'type' => 'sidebar-menu-search',
             'text' => 'Rechercher',
@@ -257,7 +258,7 @@ return [
     'plugins' => [
         'Datatables' => [
             'active' => true,
-            'files' => [
+            'files'  => [
                 [
                     'type'     => 'js',
                     'asset'    => false,
@@ -277,7 +278,7 @@ return [
         ],
         'Select2' => [
             'active' => true,
-            'files' => [
+            'files'  => [
                 [
                     'type'     => 'js',
                     'asset'    => false,
@@ -292,7 +293,7 @@ return [
         ],
         'Sweetalert2' => [
             'active' => true,
-            'files' => [
+            'files'  => [
                 [
                     'type'     => 'js',
                     'asset'    => false,
@@ -302,7 +303,7 @@ return [
         ],
         'Chartjs' => [
             'active' => true,
-            'files' => [
+            'files'  => [
                 [
                     'type'     => 'js',
                     'asset'    => false,
@@ -312,7 +313,7 @@ return [
         ],
         'Pace' => [
             'active' => false,
-            'files' => [
+            'files'  => [
                 [
                     'type'     => 'css',
                     'asset'    => false,
