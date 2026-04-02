@@ -8,10 +8,24 @@ use Illuminate\Http\Request;
 
 class TraineeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $trainees = Trainee::with('filiere.secteur')->latest()->paginate(15);
-        return view('trainees.index', compact('trainees'));
+        $filieres = Filiere::all();
+        $groups   = Trainee::distinct()->pluck('group');
+        $years    = Trainee::distinct()->pluck('graduation_year')->sortDesc();
+
+        $trainees = Trainee::with('filiere.secteur', 'documents')
+            ->when($request->filiere_id, fn($q) =>
+                $q->where('filiere_id', $request->filiere_id))
+            ->when($request->group, fn($q) =>
+                $q->where('group', $request->group))
+            ->when($request->graduation_year, fn($q) =>
+                $q->where('graduation_year', $request->graduation_year))
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('trainees.index', compact('trainees', 'filieres', 'groups', 'years'));
     }
 
     public function create()
@@ -25,6 +39,9 @@ class TraineeController extends Controller
         $request->validate([
             'filiere_id'      => 'required|exists:filieres,id',
             'cin'             => 'required|string|unique:trainees,cin',
+            'cef'             => 'nullable|string|unique:trainees,cef',
+            'date_naissance'  => 'nullable|date',
+            'phone'           => 'nullable|string|max:15',
             'first_name'      => 'required|string|max:100',
             'last_name'       => 'required|string|max:100',
             'group'           => 'required|string|max:50',
@@ -62,6 +79,9 @@ class TraineeController extends Controller
         $request->validate([
             'filiere_id'      => 'required|exists:filieres,id',
             'cin'             => 'required|string|unique:trainees,cin,' . $trainee->id,
+            'cef'             => 'nullable|string|unique:trainees,cef,' . $trainee->id,
+            'date_naissance'  => 'nullable|date',
+            'phone'           => 'nullable|string|max:15',
             'first_name'      => 'required|string|max:100',
             'last_name'       => 'required|string|max:100',
             'group'           => 'required|string|max:50',

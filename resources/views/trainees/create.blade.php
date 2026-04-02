@@ -1,11 +1,8 @@
 @extends('adminlte::page')
-
 @section('title', 'Ajouter un stagiaire')
-
 @section('content_header')
     <h1><i class="fas fa-user-plus"></i> Ajouter un stagiaire</h1>
 @stop
-
 @section('content')
 <div class="card">
     <div class="card-body">
@@ -23,18 +20,11 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Filière <span class="text-danger">*</span></label>
-                        <select name="filiere_id"
-                                class="form-control select2 @error('filiere_id') is-invalid @enderror">
-                            <option value="">-- Choisir --</option>
-                            @foreach($filieres as $filiere)
-                                <option value="{{ $filiere->id }}"
-                                    {{ old('filiere_id') == $filiere->id ? 'selected' : '' }}>
-                                    {{ $filiere->secteur->nom_secteur }} — {{ $filiere->nom_filiere }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('filiere_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        <label>CEF (Code Massar)</label>
+                        <input type="text" name="cef"
+                               class="form-control @error('cef') is-invalid @enderror"
+                               value="{{ old('cef') }}">
+                        @error('cef')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -53,6 +43,40 @@
                                class="form-control @error('last_name') is-invalid @enderror"
                                value="{{ old('last_name') }}">
                         @error('last_name')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Date de naissance</label>
+                        <input type="date" name="date_naissance"
+                               class="form-control @error('date_naissance') is-invalid @enderror"
+                               value="{{ old('date_naissance') }}">
+                        @error('date_naissance')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        <input type="text" name="phone"
+                               class="form-control @error('phone') is-invalid @enderror"
+                               value="{{ old('phone') }}" placeholder="06XXXXXXXX">
+                        @error('phone')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Filière <span class="text-danger">*</span></label>
+                        <select name="filiere_id"
+                                class="form-control select2 @error('filiere_id') is-invalid @enderror">
+                            <option value="">-- Choisir --</option>
+                            @foreach($filieres as $filiere)
+                                <option value="{{ $filiere->id }}"
+                                    {{ old('filiere_id') == $filiere->id ? 'selected' : '' }}>
+                                    {{ $filiere->secteur->nom_secteur }} — {{ $filiere->nom_filiere }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('filiere_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -84,7 +108,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="mt-3">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Enregistrer
@@ -97,9 +120,6 @@
     </div>
 </div>
 @stop
-
 @section('js')
-<script>
-    $('.select2').select2();
-</script>
+<script>$('.select2').select2();</script>
 @stop

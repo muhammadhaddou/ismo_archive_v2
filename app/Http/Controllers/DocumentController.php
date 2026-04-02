@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Document;
 use App\Models\Trainee;
+use App\Models\Filiere;
 use App\Models\Movement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,13 +43,12 @@ class DocumentController extends Controller
             'reference_number' => $request->reference_number,
         ]);
 
-        // سجل حركة Saisie
         Movement::create([
-            'document_id' => $document->id,
-            'user_id'     => Auth::id(),
-            'action_type' => 'Saisie',
-            'date_action' => now(),
-            'observations'=> 'Document enregistré',
+            'document_id'  => $document->id,
+            'user_id'      => Auth::id(),
+            'action_type'  => 'Saisie',
+            'date_action'  => now(),
+            'observations' => 'Document enregistré',
         ]);
 
         return redirect()->route('documents.index')
@@ -70,12 +70,17 @@ class DocumentController extends Controller
 
         $document->update(['status' => $request->action_type]);
 
+        $deadline = $request->action_type === 'Temp_Out'
+            ? now()->addHours(48)
+            : null;
+
         Movement::create([
-            'document_id' => $document->id,
-            'user_id'     => Auth::id(),
-            'action_type' => 'Sortie',
-            'date_action' => now(),
-            'observations'=> $request->observations,
+            'document_id'  => $document->id,
+            'user_id'      => Auth::id(),
+            'action_type'  => 'Sortie',
+            'date_action'  => now(),
+            'deadline'     => $deadline,
+            'observations' => $request->observations,
         ]);
 
         return redirect()->route('documents.show', $document)
@@ -87,24 +92,36 @@ class DocumentController extends Controller
         $document->update(['status' => 'Stock']);
 
         Movement::create([
-            'document_id' => $document->id,
-            'user_id'     => Auth::id(),
-            'action_type' => 'Retour',
-            'date_action' => now(),
-            'observations'=> $request->observations,
+            'document_id'  => $document->id,
+            'user_id'      => Auth::id(),
+            'action_type'  => 'Retour',
+            'date_action'  => now(),
+            'observations' => $request->observations,
         ]);
 
         return redirect()->route('documents.show', $document)
             ->with('success', 'Document retourné avec succès!');
     }
 
-    public function tempOut()
+    public function tempOut(Request $request)
     {
-        $documents = Document::with('trainee.filiere')
+        $filieres = Filiere::all();
+        $groups   = Trainee::distinct()->pluck('group');
+
+        $documents = Document::with('trainee.filiere', 'movements')
             ->where('type', 'Bac')
             ->where('status', 'Temp_Out')
-            ->latest()->paginate(15);
-        return view('documents.temp-out', compact('documents'));
+            ->when($request->filiere_id, fn($q) =>
+                $q->whereHas('trainee', fn($q) =>
+                    $q->where('filiere_id', $request->filiere_id)))
+            ->when($request->group, fn($q) =>
+                $q->whereHas('trainee', fn($q) =>
+                    $q->where('group', $request->group)))
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('documents.temp-out', compact('documents', 'filieres', 'groups'));
     }
 
     public function prets()
