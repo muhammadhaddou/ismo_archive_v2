@@ -39,7 +39,6 @@ Route::middleware(['auth'])->group(function () {
     // Trainees
     Route::resource('trainees', TraineeController::class);
 
-<<<<<<< HEAD
     // Documents static routes — كلها قبل resource
     Route::get('documents/bac',              [DocumentController::class, 'index'])->name('documents.bac')->defaults('type', 'Bac');
     Route::get('documents/bac/temp-out',     [DocumentController::class, 'tempOut'])->name('documents.bac.temp-out');
@@ -49,18 +48,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('documents/diplome/prets',    [DocumentController::class, 'prets'])->name('documents.diplome.prets');
     Route::get('documents/bulletin',         [DocumentController::class, 'index'])->name('documents.bulletin')->defaults('type', 'Bulletin');
     Route::get('documents/attestation',      [DocumentController::class, 'index'])->name('documents.attestation')->defaults('type', 'Attestation');
-=======
-    // Documents
-    Route::get('documents/bac',           [DocumentController::class, 'index'])->name('documents.bac')->defaults('type', 'Bac');
-    Route::get('documents/bac/temp-out',  [DocumentController::class, 'tempOut'])->name('documents.bac.temp-out');
-    Route::get('documents/bac/final-out', [DocumentController::class, 'finalOut'])->name('documents.bac.final-out');
-
-    Route::get('documents/diplome',       [DocumentController::class, 'index'])->name('documents.diplome')->defaults('type', 'Diplome');
-    Route::get('documents/diplome/prets', [DocumentController::class, 'prets'])->name('documents.diplome.prets');
-
-    Route::get('documents/bulletin',      [DocumentController::class, 'index'])->name('documents.bulletin')->defaults('type', 'Bulletin');
-    Route::get('documents/attestation',   [DocumentController::class, 'index'])->name('documents.attestation')->defaults('type', 'Attestation');
->>>>>>> c60b001b9a0eea696220532c2e90993880ff71ce
 
     Route::resource('documents', DocumentController::class)->only(['index', 'create', 'store', 'show']);
 

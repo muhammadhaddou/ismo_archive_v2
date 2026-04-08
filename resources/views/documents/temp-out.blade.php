@@ -1,4 +1,3 @@
-cat > resources/views/documents/bac/temp-out.blade.php << 'EOF'
 @extends('adminlte::page')
 @section('title', 'Retraits temporaires — Bac')
 
@@ -158,7 +157,6 @@ cat > resources/views/documents/bac/temp-out.blade.php << 'EOF'
             <tbody>
                 @forelse($documents as $doc)
                 @php
-<<<<<<< HEAD
                     $lastSortie = $doc->movements
                         ->where('action_type', 'Sortie')
                         ->sortByDesc('date_action')
@@ -171,26 +169,6 @@ cat > resources/views/documents/bac/temp-out.blade.php << 'EOF'
                     $isAlerte  = $hoursLeft !== null && $hoursLeft <= 8 && $hoursLeft >= 0;
                 @endphp
                 <tr class="{{ $isAlerte ? 'table-danger' : '' }}">
-=======
-                    $lastSortie = $doc->movements->where('action_type', 'Sortie')->sortByDesc('date_action')->first();
-                    $deadline   = $lastSortie?->deadline ? \Carbon\Carbon::parse($lastSortie->deadline) : null;
-                    $isExpired  = $deadline && now()->gt($deadline);
-
-                    $overdue = null;
-                    if ($isExpired) {
-                        $diff = $deadline->diff(now());
-                        $overdue = $diff->days > 0
-                            ? $diff->days.'j '.$diff->h.'h '.$diff->i.'min'
-                            : $diff->h.'h '.$diff->i.'min';
-                    }
-
-                    $hoursLeft = (!$isExpired && $deadline)
-                        ? now()->diffInHours($deadline, false)
-                        : null;
-                @endphp
-
-                <tr class="{{ $isExpired ? 'table-danger' : '' }}">
->>>>>>> c60b001b9a0eea696220532c2e90993880ff71ce
                     <td>{{ $loop->iteration }}</td>
 
                     <td>
@@ -227,28 +205,10 @@ cat > resources/views/documents/bac/temp-out.blade.php << 'EOF'
                     <td>
                         @if($isAlerte)
                             <span class="badge badge-danger">
-<<<<<<< HEAD
                                 <i class="fas fa-exclamation-triangle"></i> Alerte: {{ $hoursLeft }}h restantes
                             </span>
                         @elseif($hoursLeft !== null)
                             @if($hoursLeft <= 24)
-=======
-                                Expiré
-                            </span>
-                            <br>
-                            <small class="text-danger font-weight-bold">
-                                Retard: {{ $overdue }}
-                            </small>
-
-                        @elseif($hoursLeft !== null)
-
-                            @if($hoursLeft <= 6)
-                                <span class="badge badge-danger">
-                                    {{ $hoursLeft }}h restantes
-                                </span>
-
-                            @elseif($hoursLeft <= 24)
->>>>>>> c60b001b9a0eea696220532c2e90993880ff71ce
                                 <span class="badge badge-warning">
                                     {{ $hoursLeft }}h restantes
                                 </span>
@@ -505,4 +465,3 @@ cat > resources/views/documents/bac/temp-out.blade.php << 'EOF'
     })();
 </script>
 @stop
-EOF

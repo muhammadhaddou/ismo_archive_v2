@@ -13,7 +13,7 @@ class DocumentController extends Controller
 {
     public function index(Request $request)
     {
-        $type = $request->get('type');
+        $type = $request->input('type');
 
         $documents = Document::with('trainee.filiere')
             ->when($type, fn($q) => $q->where('type', $type))
@@ -155,14 +155,10 @@ class DocumentController extends Controller
         $documents = Document::with(['trainee.filiere', 'movements'])
             ->where('type', 'Bac')
             ->where('status', 'Temp_Out')
-<<<<<<< HEAD
             ->whereHas('movements', function($q) {
                 $q->where('action_type', 'Sortie')
                   ->where('deadline', '>=', now());
             })
-=======
-
->>>>>>> c60b001b9a0eea696220532c2e90993880ff71ce
             ->when($request->filiere_id, fn($q) =>
                 $q->whereHas('trainee', fn($q) =>
                     $q->where('filiere_id', $request->filiere_id)))
@@ -192,7 +188,6 @@ class DocumentController extends Controller
         ));
     }
 
-<<<<<<< HEAD
     // 🔴 Retraits écoulés (NEW)
     public function ecoule(Request $request)
     {
@@ -220,9 +215,6 @@ class DocumentController extends Controller
     }
 
     // 🔴 Retraits définitifs (NEW)
-=======
-    // 🔴 Retraits définitifs
->>>>>>> c60b001b9a0eea696220532c2e90993880ff71ce
     public function finalOut(Request $request)
     {
         $filieres = Filiere::all();
