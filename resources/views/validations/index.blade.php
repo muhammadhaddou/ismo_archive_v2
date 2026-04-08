@@ -254,3 +254,20 @@
     $(".select2").select2();
 </script>
 @stop
+
+@section('css')
+<style>
+    /* Pagination */
+    .pagination { margin: 0; }
+    .pagination .page-link { font-size: 12px; padding: 4px 10px; }
+
+    /* Fix icône flèche géante */
+    nav svg { width: 16px !important; height: 16px !important; }
+    nav span svg { width: 14px !important; height: 14px !important; }
+
+    /* Tableau compact */
+    .table td, .table th { font-size: 12px; vertical-align: middle !important; padding: 6px 8px; }
+    .badge { font-size: 10px; }
+    .btn-xs { padding: 2px 6px; font-size: 11px; }
+</style>
+@stop
