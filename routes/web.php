@@ -13,7 +13,7 @@ use App\Http\Controllers\FiliereController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CalendrierController;
 use App\Http\Controllers\DiplomesPrêtsController;
-
+use App\Http\Controllers\FiliereStatsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -108,7 +108,8 @@ Route::middleware(['auth'])->group(function () {
 // signateur validation path 
 Route::post('/diplomes-prets/{trainee}/check-promote', [DiplomesPrêtsController::class, 'checkAndPromote'])->name('diplomes.checkPromote');
 Route::post('/diplomes-prets/{trainee}/signature',     [DiplomesPrêtsController::class, 'saveSignature'])->name('diplomes.saveSignature');
-
+//Tableau de bord par filière
+Route::get('filieres/{filiere}/stats', [FiliereStatsController::class, 'index'])->name('filieres.stats');
 // Routes avec rôles (admin, agent)
 Route::middleware(['auth', 'role:admin|agent'])->group(function () {
 
