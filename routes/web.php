@@ -119,6 +119,9 @@ Route::post('/diplomes-prets/{trainee}/check-promote', [DiplomesPrêtsController
 Route::post('/diplomes-prets/{trainee}/signature',     [DiplomesPrêtsController::class, 'saveSignature'])->name('diplomes.saveSignature');
 //Tableau de bord par filière
 Route::get('filieres/{filiere}/stats', [FiliereStatsController::class, 'index'])->name('filieres.stats');
+<<<<<<< HEAD
+>>>>>>> 04b0ddcca98592b7bcb1fee43c893b11684d8351
+=======
 >>>>>>> 04b0ddcca98592b7bcb1fee43c893b11684d8351
 // Routes avec rôles (admin, agent)
 Route::middleware(['auth', 'role:admin|agent'])->group(function () {
