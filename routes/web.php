@@ -111,9 +111,30 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/diplomes-prets/{trainee}/check-promote',   [DiplomesPrêtsController::class, 'checkAndPromote'])->name('diplomes.checkPromote');
     Route::post('/diplomes-prets/{trainee}/signature',       [DiplomesPrêtsController::class, 'saveSignature'])->name('diplomes.saveSignature');
 
+    // Admin Trainee Requests and Settings
+    Route::get('admin/requests', [App\Http\Controllers\AdminRequestController::class, 'index'])->name('admin.requests.index');
+    Route::post('admin/requests/{docRequest}/schedule', [App\Http\Controllers\AdminRequestController::class, 'schedule'])->name('admin.requests.schedule');
+    Route::post('admin/requests/{docRequest}/complete', [App\Http\Controllers\AdminRequestController::class, 'complete'])->name('admin.requests.complete');
+    Route::post('admin/requests/{docRequest}/reject', [App\Http\Controllers\AdminRequestController::class, 'reject'])->name('admin.requests.reject');
+    Route::get('api/check-new-requests', [App\Http\Controllers\AdminRequestController::class, 'checkNew']);
+    Route::get('admin/settings/availability', [App\Http\Controllers\AdminSettingsController::class, 'index'])->name('admin.settings.availability');
+    Route::post('admin/settings/availability', [App\Http\Controllers\AdminSettingsController::class, 'update'])->name('admin.settings.availability.update');
+
 });
 //Tableau de bord par filière
 Route::get('filieres/{filiere}/stats', [FiliereStatsController::class, 'index'])->name('filieres.stats');
+
+// === Espace Stagiaire (Portal) ===
+Route::prefix('espace-stagiaire')->name('trainee.')->group(function () {
+    Route::get('login', [App\Http\Controllers\TraineeAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [App\Http\Controllers\TraineeAuthController::class, 'login']);
+    
+    Route::middleware(['auth.trainee'])->group(function () {
+        Route::get('dashboard', [App\Http\Controllers\TraineePortalController::class, 'dashboard'])->name('dashboard');
+        Route::post('requests', [App\Http\Controllers\TraineePortalController::class, 'storeRequest'])->name('requests.store');
+        Route::post('logout', [App\Http\Controllers\TraineeAuthController::class, 'logout'])->name('logout');
+    });
+});
 // Routes avec rôles (admin, agent)
 Route::middleware(['auth', 'role:admin|agent'])->group(function () {
 

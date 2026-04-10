@@ -76,4 +76,9 @@ class Trainee extends Model
     {
         return $this->hasOne(Validation::class);
     }
+
+    public function requests()
+    {
+        return $this->hasMany(DocumentRequest::class);
+    }
 }

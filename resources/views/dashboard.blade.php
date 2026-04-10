@@ -298,3 +298,36 @@
 @keyframes blinker { 50% { opacity: 0.3; } }
 </style>
 @stop
+
+@section('js')
+<script>
+    $(document).ready(function() {
+        let lastCount = 0;
+        
+        function checkNewRequests() {
+            $.ajax({
+                url: '/api/check-new-requests',
+                type: 'GET',
+                success: function(response) {
+                    if (response.has_new && response.count > lastCount) {
+                        toastr.options = {
+                            "closeButton": true,
+                            "timeOut": "60000", // 1 minute
+                            "extendedTimeOut": "10000",
+                            "positionClass": "toast-top-right",
+                        };
+                        toastr.info("Vous avez " + response.count + " nouvelle(s) demande(s) de stagiaire(s) !", "Nouvelle Demande");
+                        lastCount = response.count;
+                    } else if (response.count === 0) {
+                        lastCount = 0;
+                    }
+                }
+            });
+        }
+
+        // Check immediately, then every 15 seconds
+        checkNewRequests();
+        setInterval(checkNewRequests, 15000);
+    });
+</script>
+@stop

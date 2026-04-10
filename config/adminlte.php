@@ -130,6 +130,7 @@ return [
         ['header' => 'ADMINISTRATION'],
 
         ['text' => 'Utilisateurs', 'route' => 'users.index', 'icon' => 'fas fa-fw fa-user-cog'],
+        ['text' => 'Demandes Stagiaires', 'route' => 'admin.requests.index', 'icon' => 'fas fa-fw fa-inbox', 'label' => 'Nouveau', 'label_color' => 'primary'],
 
         [
             'text' => 'Paramètres',
@@ -137,6 +138,7 @@ return [
             'submenu' => [
                 ['text' => 'Secteurs', 'route' => 'secteurs.index'],
                 ['text' => 'Filières', 'route' => 'filieres.index'],
+                ['text' => 'Horaires de retrait', 'route' => 'admin.settings.availability'],
             ],
         ],
     ],
