@@ -315,7 +315,7 @@ function searchTrainees() {
         });
 
         if (results.length > 20) {
-            container.innerHTML += '<div class="list-group-item text-muted text-center small">' + results.length + ' résultats — affinez votre recherche</div>';
+            container.insertAdjacentHTML('beforeend', '<div class="list-group-item text-muted text-center small">' + results.length + ' résultats — affinez votre recherche</div>');
         }
     }
 
